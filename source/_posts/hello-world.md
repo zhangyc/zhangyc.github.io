@@ -1,5 +1,7 @@
 ---
 title: Hello World
+cover: https://i.pinimg.com/1200x/21/c2/52/21c25223345f32c36b283524163bbeff.jpg
+top_img: https://i.pinimg.com/1200x/21/c2/52/21c25223345f32c36b283524163bbeff.jpg
 ---
 Welcome to [Hexo](https://hexo.io/)! This is your very first post. Check [documentation](https://hexo.io/docs/) for more info. If you get any problems when using Hexo, you can find the answer in [troubleshooting](https://hexo.io/docs/troubleshooting.html) or you can ask me on [GitHub](https://github.com/hexojs/hexo/issues).
 
