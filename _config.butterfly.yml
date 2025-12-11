@@ -11,7 +11,7 @@ menu:
 
 # 个人信息卡片
 avatar:
-  img: https://avatars.githubusercontent.com/u/1?v=4 # 暂时用GitHub默认头像，你可以换成自己的
+  img: https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg # 暂时用GitHub默认头像，你可以换成自己的
   effect: true # 头像旋转效果
 
 author: zhangyc
@@ -21,7 +21,7 @@ author_description: Android / Flutter / iOS <br> 专注二次元与技术
 # 社交链接
 social:
   Github: https://github.com/zhangyc || fab fa-github
-  Email: mailto:your_email@example.com || fas fa-envelope
+  Email: mailto:zhangyongchun06@gmail.com || fas fa-envelope
 
 # 顶部大图 (二次元风格)
 # 这里我找了几张二次元风景图作为默认背景，你可以随时替换
