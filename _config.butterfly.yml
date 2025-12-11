@@ -1,0 +1,69 @@
+# Butterfly Theme Configuration
+# ----------------------------------------------------------
+
+# 导航栏
+menu:
+  首页: / || fas fa-home
+  归档: /archives/ || fas fa-archive
+  标签: /tags/ || fas fa-tags
+  分类: /categories/ || fas fa-folder-open
+  关于: /about/ || fas fa-heart
+
+# 个人信息卡片
+avatar:
+  img: https://avatars.githubusercontent.com/u/1?v=4 # 暂时用GitHub默认头像，你可以换成自己的
+  effect: true # 头像旋转效果
+
+author: zhangyc
+author_title: 10年移动端全栈开发
+author_description: Android / Flutter / iOS <br> 专注二次元与技术
+
+# 社交链接
+social:
+  Github: https://github.com/zhangyc || fab fa-github
+  Email: mailto:your_email@example.com || fas fa-envelope
+
+# 顶部大图 (二次元风格)
+# 这里我找了几张二次元风景图作为默认背景，你可以随时替换
+index_img: https://upload-bbs.mihoyo.com/upload/2022/09/06/190239266/0f029729053609e51442268012315df6_4999476268699900834.jpg
+# 页脚背景
+footer_bg: true
+
+# 网站背景 (全局背景)
+background: url(https://img.paulzzh.com/touhou/random)
+
+# 侧边栏设置
+aside:
+  enable: true
+  hide: false
+  button: true
+  mobile: true
+  position: right
+  card_author:
+    enable: true
+    description: true
+    button:
+      enable: true
+      icon: fab fa-github
+      text: Follow Me
+      link: https://github.com/zhangyc
+  card_announcement:
+    enable: true
+    content: 欢迎来到我的二次元技术宅基地！
+
+# 其它美化
+# 打字机效果
+typewriter:
+  enable: true
+  loop: true
+  wait: 2000
+  speed: 300
+
+# 页面加载动画
+preloader:
+  enable: true
+  source: 1 # 1: 默认进度条
+
+# 评论系统 (暂时留空，后续可以加)
+comments:
+  use: 
