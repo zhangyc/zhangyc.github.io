@@ -1,0 +1,239 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>介绍一下我自己写的状态管理库 aegis_honeycomb | aegis labs</title><meta name="author" content="zhangyc"><meta name="copyright" content="zhangyc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="🍯 为什么我要写一个新的状态管理库？在 Flutter 社区，状态管理方案百花齐放。从早期的 Provider，到后来的 Riverpod、BLoC 和 GetX，每一个库都有其独特的优势。然而，在实际的大型项目开发中，我发现始终有一些痛点难以被优雅地解决：  模板代码与代码生成（Codegen）：许多库（如 Riverpod 2.0+）强依赖 build_runner 代码生成，这在大型项目中">
+<meta property="og:type" content="article">
+<meta property="og:title" content="介绍一下我自己写的状态管理库 aegis_honeycomb">
+<meta property="og:url" content="https://zhangyc.github.io/2026/03/04/aegis-honeycomb-intro/index.html">
+<meta property="og:site_name" content="aegis labs">
+<meta property="og:description" content="🍯 为什么我要写一个新的状态管理库？在 Flutter 社区，状态管理方案百花齐放。从早期的 Provider，到后来的 Riverpod、BLoC 和 GetX，每一个库都有其独特的优势。然而，在实际的大型项目开发中，我发现始终有一些痛点难以被优雅地解决：  模板代码与代码生成（Codegen）：许多库（如 Riverpod 2.0+）强依赖 build_runner 代码生成，这在大型项目中">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg">
+<meta property="article:published_time" content="2026-03-04T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-04T05:52:01.376Z">
+<meta property="article:author" content="zhangyc">
+<meta property="article:tag" content="Dart">
+<meta property="article:tag" content="Flutter">
+<meta property="article:tag" content="State Management">
+<meta property="article:tag" content="aegis_honeycomb">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "介绍一下我自己写的状态管理库 aegis_honeycomb",
+  "url": "https://zhangyc.github.io/2026/03/04/aegis-honeycomb-intro/",
+  "image": "https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg",
+  "datePublished": "2026-03-04T00:00:00.000Z",
+  "dateModified": "2026-03-04T05:52:01.376Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "zhangyc",
+      "url": "https://zhangyc.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://zhangyc.github.io/2026/03/04/aegis-honeycomb-intro/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '介绍一下我自己写的状态管理库 aegis_honeycomb',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/img.paulzzh.com/touhou/random));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">aegis labs</span></a><a class="nav-page-title" href="/"><span class="site-name">介绍一下我自己写的状态管理库 aegis_honeycomb</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">介绍一下我自己写的状态管理库 aegis_honeycomb</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-04T00:00:00.000Z" title="Created 2026-03-04 00:00:00">2026-03-04</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-04T05:52:01.376Z" title="Updated 2026-03-04 05:52:01">2026-03-04</time></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="🍯-为什么我要写一个新的状态管理库？"><a href="#🍯-为什么我要写一个新的状态管理库？" class="headerlink" title="🍯 为什么我要写一个新的状态管理库？"></a>🍯 为什么我要写一个新的状态管理库？</h2><p>在 Flutter 社区，状态管理方案百花齐放。从早期的 Provider，到后来的 Riverpod、BLoC 和 GetX，每一个库都有其独特的优势。然而，在实际的大型项目开发中，我发现始终有一些痛点难以被优雅地解决：</p>
+<ol>
+<li><strong>模板代码与代码生成（Codegen）</strong>：许多库（如 Riverpod 2.0+）强依赖 <code>build_runner</code> 代码生成，这在大型项目中会导致编译速度缓慢，让开发体验大打折扣。</li>
+<li><strong>状态（State）与副作用（Effect）的混淆</strong>：有时候我们只需要触发一个单纯的事件（如：页面跳转、Toast 弹窗），而在响应式状态管理中，处理这种“一次性事件”往往比较别扭。</li>
+<li><strong>脱离 BuildContext 的依赖注入</strong>：在纯 Dart 业务逻辑（如 Service、Repository）中访问和修改状态时，往往需要费尽周折地传递 <code>ref</code> 或 <code>context</code>。</li>
+</ol>
+<p>为了解决这些问题，我开发了 <strong><a target="_blank" rel="noopener" href="https://pub.dev/packages/aegis_honeycomb">aegis_honeycomb</a></strong>。它是一款精简、类型安全、<strong>无代码生成 (Codegen-Free)</strong> 的 Flutter 状态管理库。</p>
+<h2 id="✨-核心特性"><a href="#✨-核心特性" class="headerlink" title="✨ 核心特性"></a>✨ 核心特性</h2><p><code>aegis_honeycomb</code> 的设计哲学是在保持最小心智负担的同时，提供强大的工程化能力。</p>
+<ul>
+<li>🎯 <strong>无上下文依赖 (Context-Free)</strong>：可以直接在纯 Dart 业务逻辑中，通过全局容器访问状态。</li>
+<li>⚡ <strong>自动依赖追踪</strong>：使用 <code>Computed</code> 时会自动从 <code>watch</code> 中追踪依赖，无需手动声明。</li>
+<li>📡 <strong>分离 State 与 Effect</strong>：清晰区分可重播的状态与一次性的事件。</li>
+<li>🎭 <strong>作用域与局部重写 (Scope&#x2F;Override)</strong>：提供灵活的依赖注入和强大的 Mock 测试能力。</li>
+<li>🔄 <strong>无代码生成 (No Codegen)</strong>：纯 Dart 实现，告别漫长的 <code>build_runner</code> 等待。</li>
+<li>🔒 <strong>类型安全</strong>：借助 Dart 强大的泛型系统保证类型推导。</li>
+</ul>
+<hr>
+<h2 id="🚀-快速上手"><a href="#🚀-快速上手" class="headerlink" title="🚀 快速上手"></a>🚀 快速上手</h2><p>你可以通过简单的三个步骤在项目中引入 <code>aegis_honeycomb</code>。</p>
+<h3 id="1-定义状态"><a href="#1-定义状态" class="headerlink" title="1. 定义状态"></a>1. 定义状态</h3><p>我们支持读写状态、衍生状态、异步状态和一次性事件。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">import</span> <span class="string">&#x27;package:aegis_honeycomb/honeycomb.dart&#x27;</span>;</span><br><span class="line"></span><br><span class="line"><span class="comment">// 基础读写状态</span></span><br><span class="line"><span class="keyword">final</span> counterState = StateRef(<span class="number">0</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 衍生状态 (自动追踪依赖)</span></span><br><span class="line"><span class="keyword">final</span> doubledCounter = Computed((watch) =&gt; watch(counterState) * <span class="number">2</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 异步状态</span></span><br><span class="line"><span class="keyword">final</span> userProfile = Computed.<span class="keyword">async</span>((watch) <span class="keyword">async</span> &#123;</span><br><span class="line">  <span class="keyword">final</span> userId = watch(currentUserId);</span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">await</span> api.fetchUser(userId);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="comment">// 一次性事件 (如 Toast)</span></span><br><span class="line"><span class="keyword">final</span> toastEffect = Effect&lt;<span class="built_in">String</span>&gt;();</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-提供全栈容器"><a href="#2-提供全栈容器" class="headerlink" title="2. 提供全栈容器"></a>2. 提供全栈容器</h3><p>你可以将容器放在全局，也可以像 Riverpod 一样包裹在顶层。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">final</span> appContainer = HoneycombContainer();</span><br><span class="line"></span><br><span class="line"><span class="keyword">void</span> main() &#123;</span><br><span class="line">  runApp(</span><br><span class="line">    HoneycombScope(</span><br><span class="line">      container: appContainer,</span><br><span class="line">      child: MyApp(),</span><br><span class="line">    ),</span><br><span class="line">  );</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-在-UI-中使用"><a href="#3-在-UI-中使用" class="headerlink" title="3. 在 UI 中使用"></a>3. 在 UI 中使用</h3><p>使用 <code>HoneycombConsumer</code> 监听并构建 UI。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">CounterPage</span> <span class="keyword">extends</span> <span class="title">StatelessWidget</span> </span>&#123;</span><br><span class="line">  <span class="meta">@override</span></span><br><span class="line">  Widget build(BuildContext context) &#123;</span><br><span class="line">    <span class="keyword">return</span> HoneycombConsumer(</span><br><span class="line">      builder: (context, ref, child) &#123;</span><br><span class="line">        <span class="comment">// 自动完成监听，当 count 或 doubled 改变时刷新</span></span><br><span class="line">        <span class="keyword">final</span> count = ref.watch(counterState);</span><br><span class="line">        <span class="keyword">final</span> doubled = ref.watch(doubledCounter);</span><br><span class="line"></span><br><span class="line">        <span class="keyword">return</span> Column(</span><br><span class="line">          children: [</span><br><span class="line">            Text(<span class="string">&#x27;Count: <span class="subst">$count</span>&#x27;</span>),</span><br><span class="line">            Text(<span class="string">&#x27;Doubled: <span class="subst">$doubled</span>&#x27;</span>),</span><br><span class="line">            ElevatedButton(</span><br><span class="line">              onPressed: () &#123;</span><br><span class="line">                <span class="keyword">final</span> container = HoneycombScope.readOf(context);</span><br><span class="line">                container.write(counterState, count + <span class="number">1</span>);</span><br><span class="line">              &#125;,</span><br><span class="line">              child: Text(<span class="string">&#x27;Increment&#x27;</span>),</span><br><span class="line">            ),</span><br><span class="line">          ],</span><br><span class="line">        );</span><br><span class="line">      &#125;,</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="🎯-亮点功能解析"><a href="#🎯-亮点功能解析" class="headerlink" title="🎯 亮点功能解析"></a>🎯 亮点功能解析</h2><h3 id="1-明确区分-State-与-Effect"><a href="#1-明确区分-State-与-Effect" class="headerlink" title="1. 明确区分 State 与 Effect"></a>1. 明确区分 State 与 Effect</h3><p>在传统的响应式流中，如果你监听了一个 error string 并在页面显示 Toast。当页面重建时，这个历史遗留的 error string 可能会导致 Toast 重复弹出。</p>
+<p>在 Honeycomb 中，我们引入了 <code>Effect</code>。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// State：可重播、可保留，始终返回最新值</span></span><br><span class="line"><span class="keyword">final</span> userName = StateRef(<span class="string">&#x27;Guest&#x27;</span>);</span><br><span class="line"></span><br><span class="line"><span class="comment">// Effect：一次性事件，用完即弃，绝不存储历史</span></span><br><span class="line"><span class="keyword">final</span> showToast = Effect&lt;<span class="built_in">String</span>&gt;(strategy: EffectStrategy.drop);</span><br></pre></td></tr></table></figure>
+
+<h3 id="2-在纯-Dart-业务逻辑中使用-脱离-Context"><a href="#2-在纯-Dart-业务逻辑中使用-脱离-Context" class="headerlink" title="2. 在纯 Dart 业务逻辑中使用 (脱离 Context)"></a>2. 在纯 Dart 业务逻辑中使用 (脱离 Context)</h3><p>我们在写 Repository 或 Service 时，经常苦恼如何和 UI 层共享数据源。通过全局 <code>HoneycombContainer</code>，你可以在任何地方读写状态和分发事件。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// app_globals.dart</span></span><br><span class="line"><span class="keyword">final</span> appContainer = HoneycombContainer();</span><br><span class="line"></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">AuthService</span> </span>&#123;</span><br><span class="line">  <span class="keyword">void</span> logout() &#123;</span><br><span class="line">    <span class="comment">// 读取状态</span></span><br><span class="line">    <span class="keyword">final</span> currentUser = appContainer.read(userState);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 修改状态</span></span><br><span class="line">    appContainer.write(userState, <span class="keyword">null</span>);</span><br><span class="line">    </span><br><span class="line">    <span class="comment">// 发送路由或 UI 事件</span></span><br><span class="line">    appContainer.emit(navigationEffect, <span class="string">&#x27;/login&#x27;</span>);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="3-灵活的作用域-Scope-与自动化测试"><a href="#3-灵活的作用域-Scope-与自动化测试" class="headerlink" title="3. 灵活的作用域 (Scope) 与自动化测试"></a>3. 灵活的作用域 (Scope) 与自动化测试</h3><p>局部覆盖 (Override) 不论是对多主题切换还是对单元测试 Mock 都是绝对的杀手锏。当遇到 <code>override</code> 时，Honeycomb 不会向上层容器查找，而是使用当前的覆盖逻辑。</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">HoneycombScope(</span><br><span class="line">  overrides: [</span><br><span class="line">    <span class="comment">// 强制此子树中的主题为深色模式</span></span><br><span class="line">    themeState.overrideWith(ThemeData.dark()),</span><br><span class="line"></span><br><span class="line">    <span class="comment">// 单元测试中替换为 Mock 数据</span></span><br><span class="line">    userProfile.overrideWith(AsyncValue.data(MockUser())),</span><br><span class="line">  ],</span><br><span class="line">  child: DarkModePage(),</span><br><span class="line">)</span><br></pre></td></tr></table></figure>
+
+<p>编写测试变得无比简单：</p>
+<figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">test(<span class="string">&#x27;counter increments&#x27;</span>, () &#123;</span><br><span class="line">  <span class="keyword">final</span> container = HoneycombContainer();</span><br><span class="line">  </span><br><span class="line">  expect(container.read(counterState), <span class="number">0</span>);</span><br><span class="line">  </span><br><span class="line">  container.write(counterState, <span class="number">1</span>);</span><br><span class="line">  </span><br><span class="line">  expect(container.read(counterState), <span class="number">1</span>);</span><br><span class="line">  expect(container.read(doubledCounter), <span class="number">2</span>); <span class="comment">// 自动计算衍生结果</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h2 id="结语"><a href="#结语" class="headerlink" title="结语"></a>结语</h2><p><code>aegis_honeycomb</code> 是我结合过往在 Flutter 大中型项目中遇到的无数业务痛点设计出的轮子。它在保留主流响应式框架依赖追踪、自动派发优点的同时，大胆舍弃了繁重的代码生成，并清晰划分了状态与副作用的边界。</p>
+<p>欢迎大家去 pub 上试用并点个 👍！<br>传送门：<a target="_blank" rel="noopener" href="https://pub.dev/packages/aegis_honeycomb">pub.dev&#x2F;packages&#x2F;aegis_honeycomb</a><br>开源仓库：<a target="_blank" rel="noopener" href="https://github.com/AegisLabsOrg/Honeycomb">GitHub</a> </p>
+<p>如果有任何建议或 Issue，欢迎在 GitHub 上交流。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://zhangyc.github.io">zhangyc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://zhangyc.github.io/2026/03/04/aegis-honeycomb-intro/">https://zhangyc.github.io/2026/03/04/aegis-honeycomb-intro/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Flutter/">Flutter</a><a class="post-meta__tags" href="/tags/State-Management/">State Management</a><a class="post-meta__tags" href="/tags/Dart/">Dart</a><a class="post-meta__tags" href="/tags/aegis-honeycomb/">aegis_honeycomb</a></div><div class="post-share"><div class="social-share" data-image="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/03/04/hello-world/" title="Hello World"><img class="cover" src="https://i.pinimg.com/1200x/21/c2/52/21c25223345f32c36b283524163bbeff.jpg" onerror="onerror=null;src='/img/404.jpg'" alt="cover of previous post"><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">Hello World</div></div><div class="info-2"><div class="info-item-1">Welcome to Hexo! This is your very first post. Check documentation for more info. If you get any problems when using Hexo, you can find the answer in troubleshooting or you can ask me on GitHub. Quick StartCreate a new post1$ hexo new &quot;My New Post&quot;  More info: Writing Run server1$ hexo server  More info: Server Generate static files1$ hexo generate  More info: Generating Deploy to remote sites1$ hexo deploy  More info: Deployment </div></div></div></a><a class="pagination-related" href="/2026/02/03/flutter-add-to-app-promotion-jank/" title="Flutter add-to-app ProMotion 拖影的底层机制与解决思路"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">Flutter add-to-app ProMotion 拖影的底层机制与解决思路</div></div><div class="info-2"><div class="info-item-1">现象与复现在 iPhone 17 系列（120Hz ProMotion 设备）中，Flutter add-to-app 页面嵌入到原生 Swift 容器后，横向或纵向滑动时会出现明显“拖影&#x2F;残影”。同一页面在纯 Flutter App 中则不明显或无法复现。 关键排查细节：通过性能工具分析发现，Flutter 的每一帧渲染耗时极短（&lt;2ms）。这直接排除了“Flutter 性能不足导致掉帧”的可能性。既然渲染这么快，为什么肉眼还是看到了拖影？ 一句话结论问题的根因是 Flutter 渲染节奏与原生容器的显示刷新节奏不一致，导致 GPU 合成时出现帧间不齐，体现为拖影&#x2F;重影。仅在 Info.plist 声明 120Hz 只是修复了“症状”，而不是解释了“机制”。 机制拆解：为什么频率不一致会“拖影”？下面用更“底层”的视角来拆解： 1. iOS 刷新节奏与 ProMotionProMotion 设备的屏幕刷新率是动态的：系统会在 60&#x2F;80&#x2F;90&#x2F;120Hz 之间切换，以节能为优先目标。刷新率由系统与内容一起协同决定，而不是应...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/01/06/riverpod3-complete-guide/" title="Riverpod 3.0 完全指南"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-06</div><div class="info-item-2">Riverpod 3.0 完全指南</div></div><div class="info-2"><div class="info-item-1">Riverpod 3.0 完全指南简介Riverpod 是一个强大的 Flutter 状态管理框架，它是 Provider 的完全重写版本。Riverpod 3.0 带来了许多重大改进和新特性，本文将全面介绍 Riverpod 3.0 的核心概念、使用方法和最佳实践。 什么是 Riverpod？Riverpod 是一个响应式缓存和数据绑定框架，它提供了：  ✅ 声明式编程 ✅ 原生网络请求支持 ✅ 自动加载&#x2F;错误处理 ✅ 编译时安全 ✅ 类型安全的查询参数 ✅ 易于测试 ✅ 支持纯 Dart（服务器&#x2F;CLI等） ✅ 状态易于组合 ✅ 内置下拉刷新支持 ✅ 自定义 lint 规则 ✅ 内置重构工具 ✅ 热重载支持    安装和配置1. 安装依赖根据你的需求选择合适的包： 12345# Flutter 项目（基础版本）flutter pub add flutter_riverpod# 使用代码生成（推荐）flutter pub add flutter_riverpod riverpod_annotation dev:riverpod_generator dev:b...</div></div></div></a><a class="pagination-related" href="/2026/02/03/dart-jit-aot-and-reflection/" title="Dart 编译启示录：JIT、AOT 与“消失”的反射"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-03</div><div class="info-item-2">Dart 编译启示录：JIT、AOT 与“消失”的反射</div></div><div class="info-2"><div class="info-item-1">引言Dart 是一门性格“分裂”的语言。 在开发阶段，它像 JavaScript 一样灵动，修改代码后按下 r 键，应用瞬间更新（Hot Reload）；而在发布到生产环境时，它又像 C++ 一样严谨、高效，编译成机器码后性能强悍。 这种“开发体验”与“运行性能”兼得的背后，是 Dart 独特且强大的双重编译与执行模式：JIT (Just-In-Time) 和 AOT (Ahead-Of-Time)。 然而，代价也是显而易见的。很多从 Java 或 C# 转过来的开发者最不习惯的一点就是：Dart 的生产环境里没有反射（Reflection）。 这篇文章将深入底层，揭示这背后的技术取舍。 JIT：为“快”而生的开发模式在 flutter run（Debug 模式）时，Dart 运行在 JIT 模式下。 1. 增量编译与 Kernel Binary当你按下 Hot Reload 时，Dart 并不是重新编译整个 App。Dart VM 使用了一个中间格式叫 Kernel Binary (.dill)。前端编译器（Common Front End, CFE）只计算文件修改的差异（De...</div></div></div></a><a class="pagination-related" href="/2026/02/03/flutter-rendering-pipeline-truth/" title="Flutter 渲染机制去伪存真：从 Widget 到像素的真正旅程"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-03</div><div class="info-item-2">Flutter 渲染机制去伪存真：从 Widget 到像素的真正旅程</div></div><div class="info-2"><div class="info-item-1">引言关于 Flutter 渲染原理的文章汗牛充栋，常规的 “Widget -&gt; Element -&gt; RenderObject” 三棵树理论大家早已烂熟于心。但在面试或深入交流中，我发现一个非常普遍的误区：  “RenderObject 是负责真实绘制的地方。”  这句话严格来说是错误的，或者至少是极具误导性的。遗憾的是，不少网络文章都存在类似的模糊表述，导致这个错误认知在开发者社区中被反复传播，甚至成为了某种“标准答案”。 这种误解掩盖了 Flutter 架构中最精彩的部分——Layer Tree（图层树）与 Raster Pipeline（光栅化管线）。 本文旨在修正这个认知，梳理从 Widget 代码被写下，到屏幕像素亮起之间，真正发生的技术细节。 第一阶段：构建与布局（UI 线程）这部分是大家最熟悉的，快速带过，但强调重点。 1. Widget &amp; ElementWidget 只是不可变的配置信息（Configuration）。Element 是负责协调的“经理”，持有 RenderObject。 2. RenderObject：它到底画了什么？这是误...</div></div></div></a><a class="pagination-related" href="/2026/02/03/swift-navigation-for-flutter-devs/" title="Swift 路由指南：致 Flutter 开发者的导航迁移手册"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-02-03</div><div class="info-item-2">Swift 路由指南：致 Flutter 开发者的导航迁移手册</div></div><div class="info-2"><div class="info-item-1">引言作为一个习惯了 Flutter Navigator 的开发者，转战 iOS 开发时，最容易混淆的概念就是 Swift (UIKit) 和 SwiftUI 的路由差异。 用户口中的 “Swift 开发” 通常指代两种完全不同的 UI 框架：  UIKit: 传统的、基于 UIViewController 的命令式框架（类比 Flutter 的命令式 Navigator 1.0）。 SwiftUI: 现代的、基于 View 的声明式框架（类比 Flutter 的 Navigator 2.0 &#x2F; GoRouter）。  本文将重点详解 Swift (UIKit) 的路由机制——这依然是目前国内大厂的主流选择，并对比 SwiftUI 的实现方式，帮助你建立完整的 iOS 导航知识体系。 核心概念映射表   Flutter 概念 Swift (UIKit) SwiftUI    Navigator (栈管理者) UINavigationController NavigationStack   Route (页面对象) UIViewController View   push(...</div></div></div></a><a class="pagination-related" href="/2026/01/09/flutter-host-vs-native-host/" title="Flutter 混合开发架构探讨：原生 Host 还是 Flutter Host？"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-09</div><div class="info-item-2">Flutter 混合开发架构探讨：原生 Host 还是 Flutter Host？</div></div><div class="info-2"><div class="info-item-1">在 Flutter 技术栈的落地过程中，架构师和开发者经常面临一个关键的决策：是以 Native 为主导（Native Host），还是以 Flutter 为主导（Flutter Host）？这个问题在混合开发（Add-to-App）场景下尤为突出。本文将深入探讨这两种模式的优劣、适用场景以及技术挑战。   两个核心流派1. Flutter Host (Flutter First &#x2F; 纯 Flutter)这是 Flutter 官方最推荐的模式，也是 flutter create 生成项目的默认结构。  架构形态：MainActivity (Android) 或 AppDelegate (iOS) 仅仅是一个容器，应用启动后立即加载 Flutter Engine，UI 和业务逻辑主要由 Dart 代码控制。 适用场景： 全新项目（Greenfield）。 或者是准备将原有 App 完全重写。 Native 功能依赖较少，或仅作为插件存在。    2. Native Host (Add-to-App &#x2F; 混合栈)这是大型存量 App 引入 Flutter 的常见模...</div></div></div></a><a class="pagination-related" href="/2026/01/09/flutter-engine-group-deep-dive/" title="Flutter EngineGroup 深度解析：混合开发的内存救星"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-01-09</div><div class="info-item-2">Flutter EngineGroup 深度解析：混合开发的内存救星</div></div><div class="info-2"><div class="info-item-1">在上一篇关于 Native Host vs Flutter Host 的讨论中，我们提到了 Native Host 模式下一个致命的痛点：多引擎带来的内存爆炸。 为了解决这个问题，Flutter 官方在 2.0 版本引入了黑科技 —— FlutterEngineGroup。即使在同一个 App 中启动多个 Flutter 实例，内存占用也微乎其微。本文将深入剖析 EngineGroup 的底层原理、性能数据以及落地实践。   为什么需要 EngineGroup？在混合开发（Add-to-App）场景中，我们经常遇到这样的需求：  原生 TabA 是原生页面，TabB 是 Flutter 页面。 原生 RecyclerView &#x2F; TableView 的某个 Cell 是 Flutter 实现的。 点击原生页面上的按钮，弹出一个 Flutter 写的 Modal 弹窗。  传统方案的困境：  多引擎模式 (Multiple Engines)： 每次 new FlutterEngine()。 后果：内存原地爆炸。每个 Engine 都是一个完整的虚拟机实例，加载独立的 Sk...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">zhangyc</div><div class="author-info-description">true</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">10</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">31</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">3</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zhangyc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/zhangyc" target="_blank" title="fab fa-github"><i class="Github"></i></a><a class="social-icon" href="mailto:zhangyongchun06@gmail.com" target="_blank" title="fas fa-envelope"><i class="Email"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">欢迎来到我的二次元技术宅基地！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8D%AF-%E4%B8%BA%E4%BB%80%E4%B9%88%E6%88%91%E8%A6%81%E5%86%99%E4%B8%80%E4%B8%AA%E6%96%B0%E7%9A%84%E7%8A%B6%E6%80%81%E7%AE%A1%E7%90%86%E5%BA%93%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">🍯 为什么我要写一个新的状态管理库？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E2%9C%A8-%E6%A0%B8%E5%BF%83%E7%89%B9%E6%80%A7"><span class="toc-number">2.</span> <span class="toc-text">✨ 核心特性</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%9A%80-%E5%BF%AB%E9%80%9F%E4%B8%8A%E6%89%8B"><span class="toc-number">3.</span> <span class="toc-text">🚀 快速上手</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%AE%9A%E4%B9%89%E7%8A%B6%E6%80%81"><span class="toc-number">3.1.</span> <span class="toc-text">1. 定义状态</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E6%8F%90%E4%BE%9B%E5%85%A8%E6%A0%88%E5%AE%B9%E5%99%A8"><span class="toc-number">3.2.</span> <span class="toc-text">2. 提供全栈容器</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E5%9C%A8-UI-%E4%B8%AD%E4%BD%BF%E7%94%A8"><span class="toc-number">3.3.</span> <span class="toc-text">3. 在 UI 中使用</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%F0%9F%8E%AF-%E4%BA%AE%E7%82%B9%E5%8A%9F%E8%83%BD%E8%A7%A3%E6%9E%90"><span class="toc-number">4.</span> <span class="toc-text">🎯 亮点功能解析</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E6%98%8E%E7%A1%AE%E5%8C%BA%E5%88%86-State-%E4%B8%8E-Effect"><span class="toc-number">4.1.</span> <span class="toc-text">1. 明确区分 State 与 Effect</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E5%9C%A8%E7%BA%AF-Dart-%E4%B8%9A%E5%8A%A1%E9%80%BB%E8%BE%91%E4%B8%AD%E4%BD%BF%E7%94%A8-%E8%84%B1%E7%A6%BB-Context"><span class="toc-number">4.2.</span> <span class="toc-text">2. 在纯 Dart 业务逻辑中使用 (脱离 Context)</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E7%81%B5%E6%B4%BB%E7%9A%84%E4%BD%9C%E7%94%A8%E5%9F%9F-Scope-%E4%B8%8E%E8%87%AA%E5%8A%A8%E5%8C%96%E6%B5%8B%E8%AF%95"><span class="toc-number">4.3.</span> <span class="toc-text">3. 灵活的作用域 (Scope) 与自动化测试</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E7%BB%93%E8%AF%AD"><span class="toc-number">5.</span> <span class="toc-text">结语</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/04/hello-world/" title="Hello World"><img src="https://i.pinimg.com/1200x/21/c2/52/21c25223345f32c36b283524163bbeff.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/04/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-04T05:52:01.376Z" title="Created 2026-03-04 05:52:01">2026-03-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/04/aegis-honeycomb-intro/" title="介绍一下我自己写的状态管理库 aegis_honeycomb">介绍一下我自己写的状态管理库 aegis_honeycomb</a><time datetime="2026-03-04T00:00:00.000Z" title="Created 2026-03-04 00:00:00">2026-03-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/03/dart-jit-aot-and-reflection/" title="Dart 编译启示录：JIT、AOT 与“消失”的反射">Dart 编译启示录：JIT、AOT 与“消失”的反射</a><time datetime="2026-02-03T00:00:00.000Z" title="Created 2026-02-03 00:00:00">2026-02-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/03/flutter-rendering-pipeline-truth/" title="Flutter 渲染机制去伪存真：从 Widget 到像素的真正旅程">Flutter 渲染机制去伪存真：从 Widget 到像素的真正旅程</a><time datetime="2026-02-03T00:00:00.000Z" title="Created 2026-02-03 00:00:00">2026-02-03</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/03/swift-navigation-for-flutter-devs/" title="Swift 路由指南：致 Flutter 开发者的导航迁移手册">Swift 路由指南：致 Flutter 开发者的导航迁移手册</a><time datetime="2026-02-03T00:00:00.000Z" title="Created 2026-02-03 00:00:00">2026-02-03</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By zhangyc</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
