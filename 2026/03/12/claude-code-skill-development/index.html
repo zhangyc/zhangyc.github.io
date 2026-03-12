@@ -1,0 +1,298 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>Claude Code Skill 开发实战：给 AI 注入领域知识 | aegis labs</title><meta name="author" content="zhangyc"><meta name="copyright" content="zhangyc"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="Skill 是什么？如果说 MCP 是给 AI 装上「手」（让它能操作外部系统），那 Skill 就是给 AI 装上「脑子」——向它注入特定领域的知识、规范和编码风格。 Claude Code Skill 是一段结构化的 Markdown 文件，包含：  触发条件：什么时候自动激活 领域知识：这个技术栈的核心概念 代码规范：必须遵守的最佳实践 示例代码：告诉 AI 该长什么样  Claude Co">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Claude Code Skill 开发实战：给 AI 注入领域知识">
+<meta property="og:url" content="https://zhangyc.github.io/2026/03/12/claude-code-skill-development/index.html">
+<meta property="og:site_name" content="aegis labs">
+<meta property="og:description" content="Skill 是什么？如果说 MCP 是给 AI 装上「手」（让它能操作外部系统），那 Skill 就是给 AI 装上「脑子」——向它注入特定领域的知识、规范和编码风格。 Claude Code Skill 是一段结构化的 Markdown 文件，包含：  触发条件：什么时候自动激活 领域知识：这个技术栈的核心概念 代码规范：必须遵守的最佳实践 示例代码：告诉 AI 该长什么样  Claude Co">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg">
+<meta property="article:published_time" content="2026-03-12T00:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-12T08:20:30.572Z">
+<meta property="article:author" content="zhangyc">
+<meta property="article:tag" content="AI">
+<meta property="article:tag" content="Claude Code">
+<meta property="article:tag" content="Skill">
+<meta property="article:tag" content="工具开发">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "Claude Code Skill 开发实战：给 AI 注入领域知识",
+  "url": "https://zhangyc.github.io/2026/03/12/claude-code-skill-development/",
+  "image": "https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg",
+  "datePublished": "2026-03-12T00:00:00.000Z",
+  "dateModified": "2026-03-12T08:20:30.572Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "zhangyc",
+      "url": "https://zhangyc.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://zhangyc.github.io/2026/03/12/claude-code-skill-development/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css?v=5.5.4"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@7.1.0/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":false,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid@4.13.0/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: 'Claude Code Skill 开发实战：给 AI 注入领域知识',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><meta name="generator" content="Hexo 8.1.1"></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word">Loading...</div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div class="bg-animation" id="web_bg" style="background-image: url(/url(https:/img.paulzzh.com/touhou/random));"></div><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">aegis labs</span></a><a class="nav-page-title" href="/"><span class="site-name">Claude Code Skill 开发实战：给 AI 注入领域知识</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 归档</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/about/"><i class="fa-fw fas fa-heart"></i><span> 关于</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">Claude Code Skill 开发实战：给 AI 注入领域知识</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-03-12T00:00:00.000Z" title="Created 2026-03-12 00:00:00">2026-03-12</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-03-12T08:20:30.572Z" title="Updated 2026-03-12 08:20:30">2026-03-12</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/AI-%E5%B7%A5%E7%A8%8B%E5%8C%96/">AI 工程化</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><h2 id="Skill-是什么？"><a href="#Skill-是什么？" class="headerlink" title="Skill 是什么？"></a>Skill 是什么？</h2><p>如果说 MCP 是给 AI 装上「手」（让它能操作外部系统），那 <strong>Skill</strong> 就是给 AI 装上「脑子」——向它注入特定领域的知识、规范和编码风格。</p>
+<p>Claude Code Skill 是一段结构化的 Markdown 文件，包含：</p>
+<ul>
+<li><strong>触发条件</strong>：什么时候自动激活</li>
+<li><strong>领域知识</strong>：这个技术栈的核心概念</li>
+<li><strong>代码规范</strong>：必须遵守的最佳实践</li>
+<li><strong>示例代码</strong>：告诉 AI 该长什么样</li>
+</ul>
+<p>Claude Code 在处理用户请求时，会根据上下文自动匹配并加载相关 Skill，就像给 AI 临时插入了一本「操作手册」。</p>
+<hr>
+<h2 id="Skill-与-MCP-的区别"><a href="#Skill-与-MCP-的区别" class="headerlink" title="Skill 与 MCP 的区别"></a>Skill 与 MCP 的区别</h2><table>
+<thead>
+<tr>
+<th></th>
+<th>MCP</th>
+<th>Skill</th>
+</tr>
+</thead>
+<tbody><tr>
+<td><strong>作用</strong></td>
+<td>扩展 AI 的「能力」（可以做什么）</td>
+<td>扩展 AI 的「知识」（怎么做得更好）</td>
+</tr>
+<tr>
+<td><strong>形式</strong></td>
+<td>运行中的进程，JSON-RPC 通信</td>
+<td>静态 Markdown 文件</td>
+</tr>
+<tr>
+<td><strong>触发</strong></td>
+<td>AI 主动调用</td>
+<td>根据描述自动匹配</td>
+</tr>
+<tr>
+<td><strong>适合</strong></td>
+<td>查数据库、调 API、读文件</td>
+<td>框架规范、团队编码标准、私有库用法</td>
+</tr>
+</tbody></table>
+<p>两者互补，不互斥。一个完整的 AI 开发工作流往往同时用到两者。</p>
+<hr>
+<h2 id="Skill-的文件结构"><a href="#Skill-的文件结构" class="headerlink" title="Skill 的文件结构"></a>Skill 的文件结构</h2><p>Skill 存放在 <code>~/.claude/skills/&lt;skill-name&gt;/SKILL.md</code>，格式如下：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">---</span><br><span class="line">name: skill-name</span><br><span class="line">description: 一句话描述，AI 用这段话决定是否激活本 Skill</span><br><span class="line"><span class="section">argument-hint: [可选，提示用户传什么参数]</span></span><br><span class="line"><span class="section">---</span></span><br><span class="line"></span><br><span class="line"><span class="section"># 正文：领域知识、规范、示例代码</span></span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p><strong>Front matter</strong> 是关键，尤其是 <code>description</code>——它就是 Skill 的「触发词」，Claude 在理解用户意图时会对比所有 Skill 的 description，选择最匹配的激活。</p>
+<hr>
+<h2 id="实战：为私有库写一个-Skill"><a href="#实战：为私有库写一个-Skill" class="headerlink" title="实战：为私有库写一个 Skill"></a>实战：为私有库写一个 Skill</h2><p>我给自己开发的 Flutter 状态管理库 <code>aegis_honeycomb</code> 写了一个 Skill，这样每次用 Claude Code 写相关代码时，它都能自动按照库的规范输出，而不是猜测或用通用写法。</p>
+<p>文件路径：<code>~/.claude/skills/honeycomb/SKILL.md</code></p>
+<h3 id="Front-matter"><a href="#Front-matter" class="headerlink" title="Front matter"></a>Front matter</h3><figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">---</span></span><br><span class="line"><span class="attr">name:</span> <span class="string">honeycomb</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">使用</span> <span class="string">aegis_honeycomb</span> <span class="string">状态管理库编写</span> <span class="string">Flutter</span> <span class="string">代码。当用户提到</span> <span class="string">Honeycomb、StateRef、Computed、Effect、HoneycombScope</span> <span class="string">或</span> <span class="string">HoneycombConsumer</span> <span class="string">时自动使用。</span></span><br><span class="line"><span class="attr">argument-hint:</span> [<span class="string">描述你要创建的状态或功能</span>]</span><br><span class="line"><span class="meta">---</span></span><br></pre></td></tr></table></figure>
+
+<p><code>description</code> 里列出了所有关键词（<code>StateRef</code>、<code>Computed</code>、<code>Effect</code>…），只要对话中出现这些词，Skill 就会被激活。</p>
+<h3 id="正文结构"><a href="#正文结构" class="headerlink" title="正文结构"></a>正文结构</h3><p>正文按照「安装 → 核心概念 → 集成 → 最佳实践 → 测试」组织，每个概念都配对比鲜明的代码示例：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">### StateRef — 可读写状态</span></span><br><span class="line"></span><br><span class="line"><span class="code">```dart</span></span><br><span class="line"><span class="code">// 定义（全局）</span></span><br><span class="line"><span class="code">final counterState = StateRef(0);</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">// 读取</span></span><br><span class="line"><span class="code">final count = container.read(counterState);</span></span><br><span class="line"><span class="code"></span></span><br><span class="line"><span class="code">// 函数式更新（1.1.1+）</span></span><br><span class="line"><span class="code">container.update(counterState, (value) =&gt; value + 1);</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="Effect-—-一次性事件（不存储历史）"><a href="#Effect-—-一次性事件（不存储历史）" class="headerlink" title="Effect — 一次性事件（不存储历史）"></a>Effect — 一次性事件（不存储历史）</h3><figure class="highlight dart"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 定义</span></span><br><span class="line"><span class="keyword">final</span> toastEffect = Effect&lt;<span class="built_in">String</span>&gt;();</span><br><span class="line"></span><br><span class="line"><span class="comment">// 触发</span></span><br><span class="line">container.emit(toastEffect, <span class="string">&#x27;保存成功&#x27;</span>);</span><br></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"></span><br><span class="line">### 最后的「用户请求处理」段</span><br><span class="line"></span><br><span class="line">Skill 正文末尾通常有一段指令，告诉 AI 拿到用户参数后该做什么：</span><br><span class="line"></span><br><span class="line">```markdown</span><br><span class="line">## 用户请求处理</span><br><span class="line"></span><br><span class="line">用户提供的参数：$ARGUMENTS</span><br><span class="line"></span><br><span class="line">根据用户描述，生成符合以上规范的 Honeycomb 代码。包括：</span><br><span class="line">- StateRef / Computed / Effect 定义</span><br><span class="line">- Service 层实现（如需要）</span><br><span class="line">- HoneycombConsumer UI 代码（如需要）</span><br><span class="line">- 对应的测试代码（如需要）</span><br></pre></td></tr></table></figure>
+
+<p><code>$ARGUMENTS</code> 是 Claude Code 注入的占位符，等于用户在 <code>/honeycomb</code> 后面输入的内容。</p>
+<hr>
+<h2 id="安装-Skill"><a href="#安装-Skill" class="headerlink" title="安装 Skill"></a>安装 Skill</h2><h3 id="方式一：手动创建"><a href="#方式一：手动创建" class="headerlink" title="方式一：手动创建"></a>方式一：手动创建</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="built_in">mkdir</span> -p ~/.claude/skills/my-skill</span><br><span class="line"><span class="built_in">cat</span> &gt; ~/.claude/skills/my-skill/SKILL.md &lt;&lt; <span class="string">&#x27;EOF&#x27;</span></span><br><span class="line">---</span><br><span class="line">name: my-skill</span><br><span class="line">description: 触发条件描述</span><br><span class="line">---</span><br><span class="line"></span><br><span class="line"><span class="comment"># 正文内容</span></span><br><span class="line">...</span><br><span class="line">EOF</span><br></pre></td></tr></table></figure>
+
+<h3 id="方式二：从注册表安装"><a href="#方式二：从注册表安装" class="headerlink" title="方式二：从注册表安装"></a>方式二：从注册表安装</h3><p>Claude Code 有一个官方 Skill 注册表，使用内置的 <code>/find-skills</code> 命令搜索：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/find-skills flutter 状态管理</span><br></pre></td></tr></table></figure>
+
+<p>Claude 会帮你找到匹配的 Skill 并引导安装。</p>
+<hr>
+<h2 id="如何触发-Skill"><a href="#如何触发-Skill" class="headerlink" title="如何触发 Skill"></a>如何触发 Skill</h2><h3 id="自动触发"><a href="#自动触发" class="headerlink" title="自动触发"></a>自动触发</h3><p>Claude Code 在理解每条用户消息时，都会扫描所有已安装 Skill 的 <code>description</code>，自动激活最匹配的。只要 description 写得准确，大部分情况下不需要手动操作。</p>
+<h3 id="手动触发（slash-command）"><a href="#手动触发（slash-command）" class="headerlink" title="手动触发（slash command）"></a>手动触发（slash command）</h3><p><code>/skill-name</code> 是 Skill 的快捷调用方式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">/honeycomb 创建一个购物车状态，包含商品列表和总价计算</span><br></pre></td></tr></table></figure>
+
+<p>等价于：把 Skill 内容 + 用户参数一起交给 Claude 处理。</p>
+<hr>
+<h2 id="写好-Skill-的关键"><a href="#写好-Skill-的关键" class="headerlink" title="写好 Skill 的关键"></a>写好 Skill 的关键</h2><h3 id="1-description-要精准"><a href="#1-description-要精准" class="headerlink" title="1. description 要精准"></a>1. description 要精准</h3><p>description 决定了 Skill 的激活准确率。要同时覆盖：</p>
+<ul>
+<li><strong>场景词</strong>：用户说”我想写状态管理”</li>
+<li><strong>技术词</strong>：用户提到库名、类名、概念名</li>
+</ul>
+<figure class="highlight yaml"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment"># 不好：太宽泛，容易误触发</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">&quot;管理 Flutter 应用状态&quot;</span></span><br><span class="line"></span><br><span class="line"><span class="comment"># 好：明确场景 + 关键词</span></span><br><span class="line"><span class="attr">description:</span> <span class="string">&quot;使用 aegis_honeycomb 库编写 Flutter 代码。当用户提到 Honeycomb、StateRef、Computed 时自动使用。&quot;</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="2-示例代码胜过文字描述"><a href="#2-示例代码胜过文字描述" class="headerlink" title="2. 示例代码胜过文字描述"></a>2. 示例代码胜过文字描述</h3><p>AI 学的就是代码模式。与其用文字解释”StateRef 是可读写状态”，不如直接给一个完整的使用示例。示例越完整，输出的代码越准。</p>
+<h3 id="3-把「不该怎么做」也写进去"><a href="#3-把「不该怎么做」也写进去" class="headerlink" title="3. 把「不该怎么做」也写进去"></a>3. 把「不该怎么做」也写进去</h3><p>明确的禁止项往往比规范项更有效：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="section">## 禁止事项</span></span><br><span class="line"><span class="bullet">-</span> 不要在 Widget 内部定义 StateRef（会丢失全局性）</span><br><span class="line"><span class="bullet">-</span> 不要用 StateRef 模拟一次性事件（用 Effect）</span><br><span class="line"><span class="bullet">-</span> 不要在 build 方法外部调用 ref.watch（会导致监听失效）</span><br></pre></td></tr></table></figure>
+
+<h3 id="4-控制篇幅"><a href="#4-控制篇幅" class="headerlink" title="4. 控制篇幅"></a>4. 控制篇幅</h3><p>Skill 会被完整注入到 Claude 的上下文。太长会占用 token，稀释核心信息。500-1000 行是比较合适的范围，关键概念每个配一个示例即可。</p>
+<hr>
+<h2 id="团队共享-Skill"><a href="#团队共享-Skill" class="headerlink" title="团队共享 Skill"></a>团队共享 Skill</h2><p>Skill 放在 <code>~/.claude/skills/</code> 是个人级别的，如果想团队共享，有两个方案：</p>
+<p><strong>方案 A：项目级 Skill</strong></p>
+<p>把 <code>SKILL.md</code> 放到项目仓库的 <code>.claude/skills/</code> 目录，Claude Code 会自动识别项目级 Skill，随 Git 一起版本管理。</p>
+<p><strong>方案 B：发布到注册表</strong></p>
+<p>如果你的 Skill 有通用价值，可以提交 PR 到 Claude Code 官方 Skill 注册表，让更多人通过 <code>/find-skills</code> 发现和安装。</p>
+<hr>
+<h2 id="MCP-Skill：组合拳"><a href="#MCP-Skill：组合拳" class="headerlink" title="MCP + Skill：组合拳"></a>MCP + Skill：组合拳</h2><p>MCP 和 Skill 配合使用才能发挥最大价值。</p>
+<p>以我目前的工作流为例：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">需求文档（PRD）</span><br><span class="line">    │</span><br><span class="line">    ├── Figma MCP ──→ 读取设计稿 ──→ 生成 UI 代码</span><br><span class="line">    │                                    ↑</span><br><span class="line">    │                              Flutter Skill（规范约束）</span><br><span class="line">    │</span><br><span class="line">    └── 后端 Skill ──→ 生成 SQL + proto + Go 骨架</span><br><span class="line">                            ↑</span><br><span class="line">                       数据库 MCP（可选，验证 schema）</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><strong>MCP</strong> 负责连通外部系统（Figma、数据库、Git…）</li>
+<li><strong>Skill</strong> 负责约束输出质量（符合团队规范、使用指定框架）</li>
+</ul>
+<p>两者的边界很清晰：<strong>MCP &#x3D; 能力扩展，Skill &#x3D; 知识注入</strong>。</p>
+<hr>
+<h2 id="小结"><a href="#小结" class="headerlink" title="小结"></a>小结</h2><p>Skill 开发的本质是<strong>把你的领域知识结构化地传递给 AI</strong>。花一两小时把团队规范、私有库用法、最佳实践整理成 Skill，往后每次让 AI 写这块代码，它都能第一次就输出符合规范的结果，而不是反复纠正。</p>
+<p>这是一种一次投入、长期收益的工作方式。</p>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://zhangyc.github.io">zhangyc</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://zhangyc.github.io/2026/03/12/claude-code-skill-development/">https://zhangyc.github.io/2026/03/12/claude-code-skill-development/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Claude-Code/">Claude Code</a><a class="post-meta__tags" href="/tags/Skill/">Skill</a><a class="post-meta__tags" href="/tags/AI/">AI</a><a class="post-meta__tags" href="/tags/%E5%B7%A5%E5%85%B7%E5%BC%80%E5%8F%91/">工具开发</a></div><div class="post-share"><div class="social-share" data-image="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg" data-sites="facebook,x,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc@1.1.6/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/03/12/mcp-development-guide/" title="MCP 开发实战：给 AI 装上「手」"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">MCP 开发实战：给 AI 装上「手」</div></div><div class="info-2"><div class="info-item-1">什么是 MCP？Model Context Protocol（MCP）是 Anthropic 在 2024 年底提出的开放协议，目标很简单：让 AI 模型能够标准化地调用外部工具。 在 MCP 之前，每家 AI 产品都有自己的 function calling 格式，工具和模型强绑定，开发一套工具只能用在一个平台。MCP 把这层协议标准化了——工具开发者只要实现 MCP Server，任何支持 MCP 的客户端（Claude Desktop、Claude Code、Cursor 等）都能直接用。 类比一下：MCP 之于 AI 工具，就像 USB-C 之于充电器。统一接口，任意组合。  核心概念MCP 的模型很简单，只有三种能力：    能力 说明 典型场景    Tools AI 可以调用的函数 查数据库、发 HTTP 请求、操作文件   Resources AI 可以读取的数据源 读取文件内容、获取配置   Prompts 预置的提示词模板 标准化的任务流程   大部分情况下，你只需要实现 Tools。  架构：Client ↔ Server12345678Claude (Cl...</div></div></div></a><a class="pagination-related" href="/2026/03/04/aegis-honeycomb-intro/" title="介绍一下我自己写的状态管理库 aegis_honeycomb"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">介绍一下我自己写的状态管理库 aegis_honeycomb</div></div><div class="info-2"><div class="info-item-1">🍯 为什么我要写一个新的状态管理库？在 Flutter 社区，状态管理方案百花齐放。从早期的 Provider，到后来的 Riverpod、BLoC 和 GetX，每一个库都有其独特的优势。然而，在实际的大型项目开发中，我发现始终有一些痛点难以被优雅地解决：  模板代码与代码生成（Codegen）：许多库（如 Riverpod 2.0+）强依赖 build_runner 代码生成，这在大型项目中会导致编译速度缓慢，让开发体验大打折扣。 状态（State）与副作用（Effect）的混淆：有时候我们只需要触发一个单纯的事件（如：页面跳转、Toast 弹窗），而在响应式状态管理中，处理这种“一次性事件”往往比较别扭。 脱离 BuildContext 的依赖注入：在纯 Dart 业务逻辑（如 Service、Repository）中访问和修改状态时，往往需要费尽周折地传递 ref 或 context。  为了解决这些问题，我开发了 aegis_honeycomb。它是一款精简、类型安全、无代码生成 (Codegen-Free) 的 Flutter 状态管理库。 ✨ 核心特性aegis_...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/03/12/mcp-development-guide/" title="MCP 开发实战：给 AI 装上「手」"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-03-12</div><div class="info-item-2">MCP 开发实战：给 AI 装上「手」</div></div><div class="info-2"><div class="info-item-1">什么是 MCP？Model Context Protocol（MCP）是 Anthropic 在 2024 年底提出的开放协议，目标很简单：让 AI 模型能够标准化地调用外部工具。 在 MCP 之前，每家 AI 产品都有自己的 function calling 格式，工具和模型强绑定，开发一套工具只能用在一个平台。MCP 把这层协议标准化了——工具开发者只要实现 MCP Server，任何支持 MCP 的客户端（Claude Desktop、Claude Code、Cursor 等）都能直接用。 类比一下：MCP 之于 AI 工具，就像 USB-C 之于充电器。统一接口，任意组合。  核心概念MCP 的模型很简单，只有三种能力：    能力 说明 典型场景    Tools AI 可以调用的函数 查数据库、发 HTTP 请求、操作文件   Resources AI 可以读取的数据源 读取文件内容、获取配置   Prompts 预置的提示词模板 标准化的任务流程   大部分情况下，你只需要实现 Tools。  架构：Client ↔ Server12345678Claude (Cl...</div></div></div></a></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="https://i.pinimg.com/736x/88/6f/3f/886f3fd4f45a162166ebeffce404a5f8.jpg" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">zhangyc</div><div class="author-info-description">true</div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">12</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">37</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">4</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/zhangyc"><i class="fab fa-github"></i><span>Follow Me</span></a><div class="card-info-social-icons"><a class="social-icon" href="https://github.com/zhangyc" target="_blank" title="fab fa-github"><i class="Github"></i></a><a class="social-icon" href="mailto:zhangyongchun06@gmail.com" target="_blank" title="fas fa-envelope"><i class="Email"></i></a></div></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">欢迎来到我的二次元技术宅基地！</div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-2"><a class="toc-link" href="#Skill-%E6%98%AF%E4%BB%80%E4%B9%88%EF%BC%9F"><span class="toc-number">1.</span> <span class="toc-text">Skill 是什么？</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Skill-%E4%B8%8E-MCP-%E7%9A%84%E5%8C%BA%E5%88%AB"><span class="toc-number">2.</span> <span class="toc-text">Skill 与 MCP 的区别</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#Skill-%E7%9A%84%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84"><span class="toc-number">3.</span> <span class="toc-text">Skill 的文件结构</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%9E%E6%88%98%EF%BC%9A%E4%B8%BA%E7%A7%81%E6%9C%89%E5%BA%93%E5%86%99%E4%B8%80%E4%B8%AA-Skill"><span class="toc-number">4.</span> <span class="toc-text">实战：为私有库写一个 Skill</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#Front-matter"><span class="toc-number">4.1.</span> <span class="toc-text">Front matter</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%AD%A3%E6%96%87%E7%BB%93%E6%9E%84"><span class="toc-number">4.2.</span> <span class="toc-text">正文结构</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#Effect-%E2%80%94-%E4%B8%80%E6%AC%A1%E6%80%A7%E4%BA%8B%E4%BB%B6%EF%BC%88%E4%B8%8D%E5%AD%98%E5%82%A8%E5%8E%86%E5%8F%B2%EF%BC%89"><span class="toc-number">4.3.</span> <span class="toc-text">Effect — 一次性事件（不存储历史）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%AE%89%E8%A3%85-Skill"><span class="toc-number">5.</span> <span class="toc-text">安装 Skill</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%B8%80%EF%BC%9A%E6%89%8B%E5%8A%A8%E5%88%9B%E5%BB%BA"><span class="toc-number">5.1.</span> <span class="toc-text">方式一：手动创建</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%96%B9%E5%BC%8F%E4%BA%8C%EF%BC%9A%E4%BB%8E%E6%B3%A8%E5%86%8C%E8%A1%A8%E5%AE%89%E8%A3%85"><span class="toc-number">5.2.</span> <span class="toc-text">方式二：从注册表安装</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%A6%82%E4%BD%95%E8%A7%A6%E5%8F%91-Skill"><span class="toc-number">6.</span> <span class="toc-text">如何触发 Skill</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%E8%87%AA%E5%8A%A8%E8%A7%A6%E5%8F%91"><span class="toc-number">6.1.</span> <span class="toc-text">自动触发</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#%E6%89%8B%E5%8A%A8%E8%A7%A6%E5%8F%91%EF%BC%88slash-command%EF%BC%89"><span class="toc-number">6.2.</span> <span class="toc-text">手动触发（slash command）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%86%99%E5%A5%BD-Skill-%E7%9A%84%E5%85%B3%E9%94%AE"><span class="toc-number">7.</span> <span class="toc-text">写好 Skill 的关键</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-description-%E8%A6%81%E7%B2%BE%E5%87%86"><span class="toc-number">7.1.</span> <span class="toc-text">1. description 要精准</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E7%A4%BA%E4%BE%8B%E4%BB%A3%E7%A0%81%E8%83%9C%E8%BF%87%E6%96%87%E5%AD%97%E6%8F%8F%E8%BF%B0"><span class="toc-number">7.2.</span> <span class="toc-text">2. 示例代码胜过文字描述</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#3-%E6%8A%8A%E3%80%8C%E4%B8%8D%E8%AF%A5%E6%80%8E%E4%B9%88%E5%81%9A%E3%80%8D%E4%B9%9F%E5%86%99%E8%BF%9B%E5%8E%BB"><span class="toc-number">7.3.</span> <span class="toc-text">3. 把「不该怎么做」也写进去</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#4-%E6%8E%A7%E5%88%B6%E7%AF%87%E5%B9%85"><span class="toc-number">7.4.</span> <span class="toc-text">4. 控制篇幅</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%A2%E9%98%9F%E5%85%B1%E4%BA%AB-Skill"><span class="toc-number">8.</span> <span class="toc-text">团队共享 Skill</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#MCP-Skill%EF%BC%9A%E7%BB%84%E5%90%88%E6%8B%B3"><span class="toc-number">9.</span> <span class="toc-text">MCP + Skill：组合拳</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%B0%8F%E7%BB%93"><span class="toc-number">10.</span> <span class="toc-text">小结</span></a></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/03/12/hello-world/" title="Hello World"><img src="https://i.pinimg.com/1200x/21/c2/52/21c25223345f32c36b283524163bbeff.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="Hello World"/></a><div class="content"><a class="title" href="/2026/03/12/hello-world/" title="Hello World">Hello World</a><time datetime="2026-03-12T08:20:30.572Z" title="Created 2026-03-12 08:20:30">2026-03-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/12/claude-code-skill-development/" title="Claude Code Skill 开发实战：给 AI 注入领域知识">Claude Code Skill 开发实战：给 AI 注入领域知识</a><time datetime="2026-03-12T00:00:00.000Z" title="Created 2026-03-12 00:00:00">2026-03-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/12/mcp-development-guide/" title="MCP 开发实战：给 AI 装上「手」">MCP 开发实战：给 AI 装上「手」</a><time datetime="2026-03-12T00:00:00.000Z" title="Created 2026-03-12 00:00:00">2026-03-12</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/03/04/aegis-honeycomb-intro/" title="介绍一下我自己写的状态管理库 aegis_honeycomb">介绍一下我自己写的状态管理库 aegis_honeycomb</a><time datetime="2026-03-04T00:00:00.000Z" title="Created 2026-03-04 00:00:00">2026-03-04</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/02/03/dart-jit-aot-and-reflection/" title="Dart 编译启示录：JIT、AOT 与“消失”的反射">Dart 编译启示录：JIT、AOT 与“消失”的反射</a><time datetime="2026-02-03T00:00:00.000Z" title="Created 2026-02-03 00:00:00">2026-02-03</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By zhangyc</span><span class="framework-info"><span>Framework </span><a target="_blank" rel="noopener" href="https://hexo.io">Hexo 8.1.1</a><span class="footer-separator">|</span><span>Theme </span><a target="_blank" rel="noopener" href="https://github.com/jerryc127/hexo-theme-butterfly">Butterfly 5.5.4</a></span></div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js?v=5.5.4"></script><script src="/js/main.js?v=5.5.4"></script><div class="js-pjax"></div><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div></body></html>
